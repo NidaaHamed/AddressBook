@@ -5,14 +5,9 @@ import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        // Database connection details
-        String dbUrl = "jdbc:mysql://localhost:3306/addressbook";
-        String driver = "com.mysql.cj.jdbc.Driver";
-        String user = "developer";
-        String pass = "121!@!DevEnv343#$#";
 
         // Initialize the DAO
-        ContactDAO contactDAO = new ContactDAO(dbUrl, driver, user, pass);
+        ContactDAO contactDAO = new ContactDAO();
 
         // Create the ContactPerson table
         if (contactDAO.createContactTable()) {

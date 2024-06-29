@@ -1,9 +1,14 @@
 package org.development;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.Date;
+import java.util.Properties;
 
 public class ContactDAO {
 
@@ -14,11 +19,28 @@ public class ContactDAO {
     private Connection con;
     private boolean conflag;
 
-    public ContactDAO(String dbUrl, String driver, String user, String pass) {
-        this.DB_URL = dbUrl;
-        this.DRIVER = driver;
-        this.USER = user;
-        this.PASS = pass;
+    public ContactDAO() {
+        try {
+            loadProperties();
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    private void loadProperties() throws FileNotFoundException {
+        Properties props = new Properties();
+        try (InputStream input = getClass().getClassLoader().getResourceAsStream("db.properties")) {
+            if (input == null) {
+                System.out.println("Sorry, unable to find db.properties");
+                return;
+            }
+            props.load(input);
+            this.DB_URL = props.getProperty("MYSQL_DB_URL");
+            this.DRIVER = props.getProperty("DRIVER");
+            this.USER = props.getProperty("USER");
+            this.PASS = props.getProperty("PASS");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private boolean connect() {
